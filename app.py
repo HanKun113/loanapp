@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for
-import textblob
 import os
 import google.generativeai as genai
 
