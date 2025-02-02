@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Loan Application Form</h1>
+        <form id="loanForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="account">Bank Account:</label>
+            <input type="text" id="account" name="account" required><br><br>
+
+            <label for="employment">Employment Status:</label>
+            <input type="text" id="employment" name="employment" required><br><br>
+
+            <label for="income">Income:</label>
+            <input type="number" id="income" name="income" required><br><br>
+
+            <label for="default">Default Record:</label>
+            <input type="text" id="default" name="default" required><br><br>
+
+            <label for="loanAmount">Loan Amount:</label>
+            <input type="number" id="loanAmount" name="loanAmount" required><br><br>
+
+            <label for="loanPeriod">Loan Period:</label>
+            <input type="number" id="loanPeriod" name="loanPeriod" required><br><br>
+
+            <label for="loanUsage">Loan Usage:</label>
+            <input type="text" id="loanUsage" name="loanUsage" required><br><br>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById("loanForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let formData = new FormData(event.target);
+            let data = Object.fromEntries(formData.entries());
+
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById("result").innerHTML = `Credit Score: ${result.credit_score}, Loan Approval Status: ${result.loan_approval}`;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
