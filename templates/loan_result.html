@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Evaluation Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Loan Evaluation Result</h2>
+    <div class="result">
+        <p><strong>Decision:</strong> {{ decision }}</p>
+        <p><strong>Credit Score:</strong> {{ credit_score }}</p>
+        
+        {% if decision == 'Approved' %}
+        <p><strong>Loan Amount:</strong> ${{ loan_amount }}</p>
+        <p><strong>Loan Period:</strong> {{ loan_period }} months</p>
+        {% else %}
+        <p><strong>Required Credit Score:</strong> {{ required_score }}</p>
+        <p><strong>Your Credit Score:</strong> {{ credit_score }}</p>
+        <p>Unfortunately, your credit score does not meet the required threshold for approval.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

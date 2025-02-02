@@ -1,15 +1,14 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loan Application Form</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h2>Loan Application Form</h2>
-    <form id="loanForm" onsubmit="return submitForm(event)">
-        <!-- Previous form fields remain the same -->
+    <form id="loanForm" action="{{ url_for('evaluate_loan') }}" method="POST">
         <div class="form-group">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
@@ -74,46 +73,5 @@
 
         <button type="submit">Submit Application</button>
     </form>
-
-    <!-- Result Display Section -->
-    <div id="resultSection" style="display: none; margin-top: 20px; padding: 20px; border-radius: 4px;">
-        <h3>Credit Assessment Result</h3>
-        <p id="creditScore"></p>
-        <p id="loanDecision"></p>
-        <p id="riskAnalysis"></p>
-    </div>
-
-    <script>
-        function validateForm(event) {
-            event.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData.entries());
-            
-            // Simple form validation
-            if (parseInt(data.loanAmount) <= 0) {
-                alert('Please enter a valid loan amount');
-                return false;
-            }
-            
-            if (parseInt(data.loanPeriod) <= 0 || parseInt(data.loanPeriod) > 360) {
-                alert('Please enter a valid loan period (1-360 months)');
-                return false;
-            }
-            
-            if (parseInt(data.income) <= 0) {
-                alert('Please enter a valid monthly income');
-                return false;
-            }
-            
-            // Additional validation logic can be added here
-            
-            // Display submitted data
-            console.log('Form data:', data);
-            alert('Form submitted successfully!');
-            return false; // Prevent actual submission
-        }
-    </script>
 </body>
 </html>

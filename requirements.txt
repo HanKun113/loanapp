@@ -1,4 +1,3 @@
-flask
+Flask
+werkzeug
 gunicorn
-textblob
-google-generativeai

@@ -24,9 +24,12 @@ input, select {
 }
 
 .loan-details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.loan-details div {
+    width: 48%;
 }
 
 button {
@@ -36,9 +39,12 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    width: 100%;
 }
 
 button:hover {
     background-color: #45a049;
+}
+
+.result {
+    margin-top: 20px;
 }
