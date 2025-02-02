@@ -1,5 +1,4 @@
-Flask
-werkzeug
+flask
 gunicorn
 textblob
 google-generativeai

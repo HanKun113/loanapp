@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .result-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .score-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            font-weight: bold;
+        }
+        .result-details {
+            margin-top: 20px;
+        }
+        .approved {
+            background-color: #4CAF50;
+        }
+        .rejected {
+            background-color: #f44336;
+        }
+        .warning {
+            background-color: #ff9800;
+        }
+        .detail-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="result-container">
+        <h2>Loan Application Result</h2>
+        <div class="score-display">
+            <div id="scoreCircle" class="score-circle">
+                <!-- Score will be inserted here -->
+            </div>
+            <h3 id="decisionText"><!-- Decision will be inserted here --></h3>
+        </div>
+        <div class="result-details">
+            <div id="applicationDetails">
+                <!-- Application details will be inserted here -->
+            </div>
+            <div id="riskFactors">
+                <!-- Risk factors will be inserted here -->
+            </div>
+        </div>
+        <a href="/" class="back-button">Submit New Application</a>
+    </div>
+
+    <script>
+        function calculateCreditScore(formData) {
+            let score = 600; // 基础分数
+            
+            // 收入评分 (最高100分)
+            const income = parseInt(formData.income);
+            if (income > 10000) score += 100;
+            else if (income > 5000) score += 75;
+            else if (income > 3000) score += 50;
+            else score += 25;
+            
+            // 就业状态评分 (最高100分)
+            switch (formData.employmentStatus) {
+                case 'employed':
+                    score += 100;
+                    break;
+                case 'self-employed':
+                    score += 80;
+                    break;
+                case 'retired':
+                    score += 60;
+                    break;
+                case 'unemployed':
+                    score += 20;
+                    break;
+            }
+            
+            // 违约记录评分 (最高100分)
+            if (formData.defaultRecord === 'no') {
+                score += 100;
+            }
+            
+            // 贷款金额与收入比率评分 (最高100分)
+            const loanAmount = parseInt(formData.loanAmount);
+            const monthlyPayment = loanAmount / parseInt(formData.loanPeriod);
+            const debtRatio = monthlyPayment / income;
+            
+            if (debtRatio <= 0.3) score += 100;
+            else if (debtRatio <= 0.4) score += 75;
+            else if (debtRatio <= 0.5) score += 50;
+            else score += 25;
+            
+            return Math.min(1000, score);
+        }
+
+        function displayResult() {
+            // 获取URL参数
+            const params = new URLSearchParams(window.location.search);
+            const formData = {};
+            for (const [key, value] of params) {
+                formData[key] = value;
+            }
+            
+            // 计算信用分数
+            const creditScore = calculateCreditScore(formData);
+            
+            // 更新分数显示
+            const scoreCircle = document.getElementById('scoreCircle');
+            scoreCircle.textContent = creditScore;
+            
+            // 设置颜色和决定
+            let decision;
+            if (creditScore >= 750) {
+                scoreCircle.className = 'score-circle approved';
+                decision = 'Approved';
+            } else if (creditScore >= 650) {
+                scoreCircle.className = 'score-circle warning';
+                decision = 'Conditionally Approved';
+            } else {
+                scoreCircle.className = 'score-circle rejected';
+                decision = 'Rejected';
+            }
+            
+            document.getElementById('decisionText').textContent = `Application ${decision}`;
+            
+            // 显示申请详情
+            const details = document.getElementById('applicationDetails');
+            details.innerHTML = `
+                <h3>Application Details</h3>
+                <div class="detail-item">Name: ${formData.name}</div>
+                <div class="detail-item">Monthly Income: $${formData.income}</div>
+                <div class="detail-item">Loan Amount: $${formData.loanAmount}</div>
+                <div class="detail-item">Loan Period: ${formData.loanPeriod} months</div>
+                <div class="detail-item">Purpose: ${formData.loanUsage}</div>
+            `;
+            
+            // 显示风险因素
+            const riskFactors = document.getElementById('riskFactors');
+            const risks = [];
+            
+            if (parseInt(formData.income) < 3000) {
+                risks.push('Low income level');
+            }
+            if (formData.defaultRecord === 'yes') {
+                risks.push('Previous default record');
+            }
+            if ((parseInt(formData.loanAmount) / parseInt(formData.loanPeriod)) / parseInt(formData.income) > 0.4) {
+                risks.push('High debt-to-income ratio');
+            }
+            
+            if (risks.length > 0) {
+                riskFactors.innerHTML = `
+                    <h3>Risk Factors</h3>
+                    ${risks.map(risk => `<div class="detail-item">${risk}</div>`).join('')}
+                `;
+            }
+        }
+        
+        // 页面加载时显示结果
+        window.onload = displayResult;
+    </script>
+</body>
+</html>

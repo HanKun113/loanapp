@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
 </head>
 <body>
     <h2>Loan Application Form</h2>
-    <form id="loanForm" action="{{ url_for('evaluate_loan') }}" method="POST">
+    <form id="loanForm" action="/result" method="POST" onsubmit="return validateForm(event)">
         <div class="form-group">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
@@ -73,5 +73,32 @@
 
         <button type="submit">Submit Application</button>
     </form>
+
+    <script>
+        function validateForm(event) {
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            if (parseInt(data.loanAmount) <= 0) {
+                alert('Please enter a valid loan amount');
+                event.preventDefault();
+                return false;
+            }
+            
+            if (parseInt(data.loanPeriod) <= 0 || parseInt(data.loanPeriod) > 360) {
+                alert('Please enter a valid loan period (1-360 months)');
+                event.preventDefault();
+                return false;
+            }
+            
+            if (parseInt(data.income) <= 0) {
+                alert('Please enter a valid monthly income');
+                event.preventDefault();
+                return false;
+            }
+            
+            return true; 
+        }
+    </script>
 </body>
 </html>
