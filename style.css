@@ -1,4 +1,4 @@
-/* Basic styling for the form and page layout */
+/* 基本样式 */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f7f6;
@@ -23,7 +23,7 @@ h1 {
 form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px; /* 增加间距 */
 }
 
 label {

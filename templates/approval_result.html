@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approval Result</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Loan Application Result</h1>
+        <p>Status: <strong>{{ approval_status }}</strong></p>
+        <p>Credit Score: {{ credit_score }}</p>
+
+        {% if approval_status == 'Approved' %}
+            <p>Your loan amount: {{ loan_amount }}</p>
+            <p>Your loan period: {{ loan_period }} months</p>
+        {% else %}
+            <p>Your credit score needs to be at least {{ required_score }} to apply for this loan.</p>
+        {% endif %}
+
+        <div class="footer">
+            <p>&copy; 2025 Loan Processing System</p>
+        </div>
+    </div>
+</body>
+</html>
