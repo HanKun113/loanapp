@@ -3,6 +3,13 @@ import random
 
 app = Flask(__name__)
 
+# 贷款额度与信用分的对应关系
+loan_limits = {
+    600: 50000,
+    700: 100000,
+    800: 200000
+}
+
 # 计算信用分
 def calculate_credit_score(income, default_record, employment_status):
     score = 500  # 初始分数
@@ -29,12 +36,6 @@ def calculate_credit_score(income, default_record, employment_status):
 
 # 贷款审批逻辑
 def approve_loan(credit_score, loan_amount):
-    loan_limits = {
-        600: 50000,
-        700: 100000,
-        800: 200000
-    }
-    
     for score, max_loan in loan_limits.items():
         if credit_score >= score and loan_amount <= max_loan:
             return "Approved", max_loan
