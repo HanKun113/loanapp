@@ -9,53 +9,40 @@
 <body>
     <div class="container">
         <h1>Loan Application Form</h1>
-        <form id="loanForm">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required><br><br>
+        <form id="loanForm" method="POST" action="/submit">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
 
-            <label for="account">Bank Account:</label>
-            <input type="text" id="account" name="account" required><br><br>
+            <label for="bank_account">Bank Account</label>
+            <input type="text" id="bank_account" name="bank_account" required>
 
-            <label for="employment">Employment Status:</label>
-            <input type="text" id="employment" name="employment" required><br><br>
+            <label for="employment_status">Employment Status</label>
+            <select id="employment_status" name="employment_status" required>
+                <option value="Employed">Employed</option>
+                <option value="Unemployed">Unemployed</option>
+                <option value="Self-employed">Self-employed</option>
+            </select>
 
-            <label for="income">Income:</label>
-            <input type="number" id="income" name="income" required><br><br>
+            <label for="income">Monthly Income</label>
+            <input type="number" id="income" name="income" required>
 
-            <label for="default">Default Record:</label>
-            <input type="text" id="default" name="default" required><br><br>
+            <label for="default_record">Default Record</label>
+            <input type="text" id="default_record" name="default_record" required>
 
-            <label for="loanAmount">Loan Amount:</label>
-            <input type="number" id="loanAmount" name="loanAmount" required><br><br>
+            <label for="loan_amount">Loan Amount</label>
+            <input type="number" id="loan_amount" name="loan_amount" required>
 
-            <label for="loanPeriod">Loan Period:</label>
-            <input type="number" id="loanPeriod" name="loanPeriod" required><br><br>
+            <label for="loan_period">Loan Period (Months)</label>
+            <input type="number" id="loan_period" name="loan_period" required>
 
-            <label for="loanUsage">Loan Usage:</label>
-            <input type="text" id="loanUsage" name="loanUsage" required><br><br>
+            <label for="loan_usage">Loan Usage</label>
+            <input type="text" id="loan_usage" name="loan_usage" required>
 
-            <button type="submit">Submit</button>
+            <button type="submit">Submit Application</button>
         </form>
-
-        <div id="result"></div>
+        <div class="footer">
+            <p>&copy; 2025 Loan Processing System</p>
+        </div>
     </div>
-    <script>
-        document.getElementById("loanForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            let formData = new FormData(event.target);
-            let data = Object.fromEntries(formData.entries());
-
-            fetch('/calculate', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                document.getElementById("result").innerHTML = `Credit Score: ${result.credit_score}, Loan Approval Status: ${result.loan_approval}`;
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    </script>
 </body>
 </html>

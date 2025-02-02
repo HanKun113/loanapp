@@ -1,50 +1,65 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
 import random
 
 app = Flask(__name__)
 
-# Dummy function for calculating credit score
-def calculate_credit_score(income, employment_status, default_record):
-    score = 0
-    if income >= 5000:
-        score += 30
-    if employment_status == "Employed":
-        score += 20
-    if default_record == "No":
+# Business Logic: Function to calculate credit score based on the input
+def calculate_credit_score(income, default_record, employment_status):
+    # Simplified scoring logic
+    score = 500  # Base score
+
+    # Adjust score based on income
+    if income > 3000:
         score += 50
+    elif income > 1000:
+        score += 20
+
+    # Adjust score based on default record
+    if default_record.lower() == "no":
+        score += 100
+    else:
+        score -= 100
+
+    # Adjust score based on employment status
+    if employment_status == "Employed":
+        score += 50
+    elif employment_status == "Self-employed":
+        score += 30
+
     return score
 
-# Dummy function for loan approval based on credit score
-def loan_approval(credit_score, loan_amount):
-    if credit_score >= 70:
-        if loan_amount <= 100000:
+# Logic for loan approval based on credit score
+def approve_loan(credit_score, loan_amount):
+    if credit_score > 600:
+        if loan_amount <= 50000:
             return "Approved"
         else:
-            return "Denied"
+            return "Rejected: Loan amount exceeds limit"
     else:
-        return "Denied"
+        return "Rejected: Insufficient credit score"
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/calculate', methods=['POST'])
-def calculate():
-    data = request.get_json()
+@app.route('/submit', methods=['POST'])
+def submit_form():
+    name = request.form['name']
+    bank_account = request.form['bank_account']
+    employment_status = request.form['employment_status']
+    income = float(request.form['income'])
+    default_record = request.form['default_record']
+    loan_amount = float(request.form['loan_amount'])
+    loan_period = int(request.form['loan_period'])
+    loan_usage = request.form['loan_usage']
 
-    name = data.get('name')
-    account = data.get('account')
-    employment_status = data.get('employment')
-    income = float(data.get('income'))
-    default_record = data.get('default')
-    loan_amount = float(data.get('loanAmount'))
-    loan_period = int(data.get('loanPeriod'))
-    loan_usage = data.get('loanUsage')
+    # Calculate credit score
+    credit_score = calculate_credit_score(income, default_record, employment_status)
 
-    credit_score = calculate_credit_score(income, employment_status, default_record)
-    approval_status = loan_approval(credit_score, loan_amount)
+    # Loan approval logic
+    approval_status = approve_loan(credit_score, loan_amount)
 
-    return jsonify({'credit_score': credit_score, 'loan_approval': approval_status})
+    return f"Application for {name}: Credit Score: {credit_score}, Status: {approval_status}"
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
